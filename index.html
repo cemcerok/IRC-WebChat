@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="copyright" content="&copy; Copyright 2018-2025 - Office IRC Inc">
+    <title>IRC WebChat#321</title>
+    <link rel="stylesheet" href="css/chat.css" />
+    <script type="text/javascript" src="js/oirc.js"></script>
+    <script type="text/javascript" src="js/oirc_config.js"></script>
+</head>
+<body>
+    <div id="WcApp" class="ChatContainer PadContainer">
+        <div class="ToolbarPanel">
+            <div class="ChatToolbar">
+                <button class="ChatButton" id="csConnect" type="button" onclick="javascript:ConnectDialog();" title="Connect" alt="Connect"><img src="images/toolbar/connect.png" /></button><button class="ChatButton Spacer" id="csDisconnect" type="button" disabled onclick="javascript:Disconnect();" title="Disconnect" alt="Disconnect"><img src="images/toolbar/disconnect.png" /></button><button class="ChatButton" id="csOpen" type="button" disabled onclick="javascript:JoinDialog();" title="Join Room" alt="Join Room"><img src="images/toolbar/open.png" /></button><button class="ChatButton" id="csLeave" type="button" disabled onclick="javascript:LeaveChannel();" title="Leave Room" alt="Leave Room"><img src="images/toolbar/leave.png" /></button><button class="ChatButton Spacer" id="csList" type="button" disabled onclick="javascript:ListDialog();" title="Room List" alt="Leave Room"><img src="images/toolbar/list.png" /></button><button class="ChatButton" id="csAbout" type="button" onclick="javascript:AboutDialog();" title="About" alt="About"><img src="images/toolbar/about.png" /></button>
+                <div class="ChannelName" id="csChannelName"></div>
+                <div class="ChannelCounter" id="csChannelCounter"></div>
+                <div class="ChannelTopic" id="csChannelTopic"></div>
+                <img class="StatusIcon Hide" id="csInsecure" src="images/toolbar/insecure.png" title="Not Secure" alt="Not Secure" />
+                <img class="StatusIcon Hide" id="csSecured" src="images/toolbar/secure.png" title="SSL Secured" alt="SSL Secured" />
+            </div>
+        </div>
+        <div class="TabBar" id="csTabs"></div>
+        <div class="ChatArea">
+            <div class="MainPanel" id="csMainPanel">
+                <div class="PanelSplit">
+                    <div class="HistoryPanel" id="pnHistoryPanel" onmouseover="javascript:HistoryHoverSelection();" onmouseout="javascript:NoHoverSelection();">
+                        <div class="HistoryContent" id="txtHistoryContent"></div>
+                    </div>
+                </div>
+                <div id="FBP1">
+                    <div class="FormatBar">
+                        <button class="FormatButton" id="csColor" type="button" title="Color" alt="Color" onclick="javascript:ToggleColorPicker(false);"><img src="images/formatbar/color.png" /></button><button class="FormatButton" id="csHighlight" type="button" title="Highlight" alt="Highlight" onclick="javascript:ToggleColorPicker(true);"><img src="images/formatbar/highlight.png" /></button>
+                        <input class="FormatCheckbox" id="csBold" type="checkbox" /><label class="FormatCheckboxLabel fcBold" title="Bold" alt="Bold" onmousedown="javascript:event.preventDefault();" onclick="javascript:document.getElementById('csBold').checked = !document.getElementById('csBold').checked; SetFormat(null, null, document.getElementById('csBold').checked);"></label><input class="FormatCheckbox" id="csItalic" type="checkbox" /><label class="FormatCheckboxLabel fcItalic" title="Italic" alt="Italic" onmousedown="javascript:event.preventDefault();" onclick="javascript:document.getElementById('csItalic').checked = !document.getElementById('csItalic').checked; SetFormat(null, null, null, document.getElementById('csItalic').checked);"></label><input class="FormatCheckbox Spacer" id="csUnderline" type="checkbox" /><label class="FormatCheckboxLabel fcUnderline Spacer" title="Underline" alt="Underline" onmousedown="javascript:event.preventDefault();" onclick="javascript:document.getElementById('csUnderline').checked = !document.getElementById('csUnderline').checked; SetFormat(null, null, null, null, document.getElementById('csUnderline').checked);"></label>
+                        <button class="FormatButton" id="csEmojis" type="button" title="Emojis" alt="Emojis" onclick="javascript:ToggleEmojis();"><img src="images/formatbar/emojis.png" /></button>
+                        <button class="FormatButton" id="csGifs" type="button" title="GIFs" alt="GIFs" onclick="javascript:ToggleGifs();"><img src="images/formatbar/gifs.png" /></button>
+                        <button class="FormatButton" id="csStickers" type="button" title="Stickers" alt="Stickers" onclick="javascript:ToggleStickers();"><img src="images/formatbar/stickers.png" /></button>
+                        <input class="FormatCheckbox" id="csAway" type="checkbox" onclick="javascript:SetAway(this.checked);" /><label for="csAway" class="FormatCheckboxLabel fcAway" title="Away" alt="Away"></label><input class="FormatCheckbox" id="csPause" type="checkbox" onclick="javascript:SetPause(this.checked);" /><label for="csPause" class="FormatCheckboxLabel fcPause OnRight" title="Pause" alt="Pause"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="SidePanel Hide" id="csSidePanel">
+                <div class="PanelSlideBar" id="csPanelSlideBar"></div>
+                <div class="MemberList"><div id="lblMembers"></div></div>
+            </div>
+        </div>
+        <div class="InputPanel">
+            <div id="FBP2"></div>
+            <div class="InputBar">
+                <div class="CommandInput" contenteditable="true" id="txtInput" onkeypress="javascript:if (event.keyCode === 13) { IssueCommand(); return false; }" oninput="javascript:CommandUpdate(); FormatUpdate(2);" onclick="javascript:FormatUpdate(1);" onkeyup="javascript:FormatUpdate(1);"></div>
+                <div class="CommandButtons">
+                    <button class="ChatButton" id="csSay" type="button" disabled onclick="javascript:IssueCommand(0);" title="Say" alt="Say"><img src="images/sendbar/say.png" /></button><button class="ChatButton" id="csThink" disabled type="button" onclick="javascript:IssueCommand(1);" title="Think" alt="Think"><img src="images/sendbar/think.png" /></button><button class="ChatButton" id="csEmote" type="button" disabled onclick="javascript:IssueCommand(2);" title="Emote" alt="Emote"><img src="images/sendbar/emote.png" /></button><button class="ChatButton" id="csWhisper" type="button" disabled onclick="javascript:IssueCommand(3);" title="Whisper" alt="Whisper"><img src="images/sendbar/whisper.png" /></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwm" id="csMemberMenu">
+        <div class="CwmItem" id="csChangeNick" onclick="javascript:ChangeNickDialog();">Change Nick...</div>
+        <hr id="csMMS1">
+        <div class="CwmItem" id="csGetIdentity" onclick="javascript:GetIdentity();">Get Identity</div>
+        <div class="CwmItem" id="csPrivateChat" onclick="javascript:MessageMemberBySelection();">Private Chat</div>
+        <div class="CwmItem" id="csIgnoreUser" onclick="javascript:IgnoreUser();">Ignore</div>
+        <hr id="csMMS2">
+        <div class="CwmItem" id="csGetVersion" onclick="javascript:GetVersion();">Version</div>
+        <div class="CwmItem" id="csGetLagTime" onclick="javascript:GetLagTime();">Lag Time</div>
+        <div class="CwmItem" id="csGetLocalTime" onclick="javascript:GetLocalTime();">Local Time</div>
+        <hr id="csMMS3">
+        <div class="CwmItem" id="csKickUser" onclick="javascript:KickUserDialog();">Kick...</div>
+        <div class="CwmItem" id="csBanUnban" onclick="javascript:BanDialog();">Ban\Unban...</div>
+        <hr id="csMMS4">
+        <div class="CwmItem" id="csMakeUserOwner" onclick="javascript:MakeUserOwner();">Make Owner</div>
+        <div class="CwmItem" id="csMakeUserHost" onclick="javascript:MakeUserHost();">Make Host</div>
+        <div class="CwmItem" id="csMakeUserAide" onclick="javascript:MakeUserAide();">Make Aide</div>
+        <div class="CwmItem" id="csMakeUserParticipant" onclick="javascript:MakeUserParticipant();">Make Participant</div>
+        <div class="CwmItem" id="csMakeUserSpectator" onclick="javascript:MakeUserSpectator();">Make Spectator</div>
+    </div>
+    <div class="Cwm" id="csHistoryMenu">
+        <div class="CwmItem" onclick="javascript:CopyLine();">Copy Line</div>
+        <div class="CwmItem" onclick="javascript:CopyAll();">Copy All</div>
+        <div class="CwmItem" onclick="javascript:ClearHistory();">Clear History</div>
+        <hr id="csMMS5">
+        <div id="csMenuModeTopic" class="CwmItem Disabled" onclick="javascript:ModeDialog();">Mode/Topic...</div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csConnectDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/connect.png" /> Connect</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <label class="ConnectInputLabel" for="txtServerName">Server name:</label>
+                <input class="ConnectInput" type="text" id="txtServerName" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnConnect').click(); return false; }">
+            </div>
+            <div class="row">
+                <label class="ConnectInputLabel" for="txtNickname">Nickname:</label>
+                <input class="ConnectInput" type="text" id="txtNickname" value="Guest" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnConnect').click(); return false; }">
+            </div>
+            <div class="row">
+                <label class="ConnectInputLabel" for="txtChannel">Chat Room:</label>
+                <textarea class="ConnectInput" rows="1" id="txtChannel" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnConnect').click(); return false; }"></textarea>
+            </div>
+            <div class="row">
+                <label class="ConnectInputLabel" for="txtPassword">Password:</label>
+                <input class="ConnectInput" type="password" id="txtPassword" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnConnect').click(); return false; }">
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelConnect" onclick="javascript:SetVisibility('csConnectDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnConnect" onclick="javascript:SetVisibility('csConnectDialog', false);Connect(document.getElementById('txtServerName').value, document.getElementById('txtNickname').value, null, document.getElementById('txtPassword').value, document.getElementById('txtChannel').value);" value="Connect">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csCaptchaDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/captcha.png" /> CAPTCHA challenge</div>
+        <div class="CwfContainer">
+            <div class="row CaptchaSpacer">
+                <div class="CwfCol-100">
+                    <img id="CaptchaImage" src="" alt="Captcha Image">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100">
+                    <label id="lblCaptcha" for="txtCaptcha">Type the characters above:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedInput">
+                    <input class="CwfInput" type="text" id="txtCaptcha" value="" onkeypress="javascript:if (event.keyCode === 13) { Captcha(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelConnect" onclick="javascript:Disconnect();" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnCaptcha" onclick="javascript:Captcha();" value="Submit">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csJoinDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/open.png" /> Enter Room</div>
+        <div class="CwfContainer">
+            <label id="lblJoinChannel" for="txtJoinChannel">Enter the name of a new or existing room:</label>
+            <input class="CwfInput" type="text" id="txtJoinChannel" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnJoin').click(); return false; }">
+            <label for="txtJoinChannelPassword">Optional Password:</label>
+            <input class="CwfInput" type="password" id="txtJoinChannelPassword" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnJoin').click(); return false; }">
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelJoin" onclick="javascript:SetVisibility('csJoinDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnJoin" onclick="javascript:JoinRoom();" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csListDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/list.png" /> Room List</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-100">
+                    <div class="RoomList">
+                        <table id="csChannelList" class="Cwt FixedHeader">
+                            <thead>
+                                <tr>
+                                    <th class="CwtRoom">Room</th>
+                                    <th class="CwtColNumSort CwfMembers">Users</th>
+                                    <th class="CwtTopic">Topic</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfLeft">
+                    <label class="CwfRight" for="chkRegisteredOnly" id="lblRegisteredOnly">Registered only</label>
+                    <input class="CwfRight CwfListCheckbox" type="checkbox" id="chkRegisteredOnly" onclick="javascript:RefreshList();" />
+                    <input class="CwfLeft" type="button" id="btnListRefresh" onclick="javascript:RefreshList();" value="Refresh">
+                    <input class="CwfLeft" type="button" id="btnListJoin" onclick="javascript:EnterListedRoom();" value="Enter">
+                    <input class="CwfLeft" type="button" id="btnCancelList" onclick="javascript:SetVisibility('csListDialog', false);" value="Close">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csModeDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/open.png" /> Room Mode/Topic</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-100">
+                    <label id="lblModeInfo"></label>
+                    <input type="hidden" id="txtModeChannel" value="" />
+                </div>
+            </div>
+            <div class="row">
+                <label class="ModeInputLabel" for="cboChannelType">Type:</label>
+                <select class="ModeInput" id="cboChannelType">
+                    <option value="Public">Public</option>
+                    <option value="Private">Private</option>
+                    <option value="Secret">Secret</option>
+                </select>
+            </div>
+            <div class="row">
+                <label class="ModeInputLabel" for="txtTopic">Topic:</label>
+                <textarea class="ModeInput" rows="2" id="txtTopic" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnMode').click(); return false; }"></textarea>
+            </div>
+            <div id="OnJoin">
+                <div class="row">
+                    <label class="ModeInputLabel" for="txtOnJoin">Greeting:</label>
+                    <input class="ModeInput" type="text" id="txtOnJoin" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnMode').click(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="ModeInputCheckboxA">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkModerated" /> <label class="CwfLeft" for="chkModerated">Moderated</label>
+                </div>
+                <div class="ModeInputCheckboxB">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkTopicOp" /> <label class="CwfLeft" for="chkTopicOp">No Topic Changes</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ModeInputCheckboxA">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkInviteOnly" /> <label class="CwfLeft" for="chkInviteOnly">Invite Only</label>
+                </div>
+                <div class="ModeInputCheckboxB">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkNoExternal" /> <label class="CwfLeft" for="chkNoExternal">No External Messages</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ModeInputCheckboxA">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkNoWhispering" /> <label class="CwfLeft" for="chkNoWhispering">No Whispering</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="ModeInputCheckboxC">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkMemberLimit" /> <label id="lblMemberLimit" class="CwfLeft" for="chkMemberLimit">Member Limit:</label>
+                </div>
+                <div class="ModeInputCheckboxC">
+                    <input class="ModeCheckboxInput" type="text" id="txtMemberLimit" value="0" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnMode').click(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="ModeInputCheckboxC">
+                    <input class="CwfLeft CwfModeCheckbox" type="checkbox" id="chkMemberPassword" /> <label id="lblMemberPassword" class="CwfLeft" for="chkMemberPassword">Optional Password:</label>
+                </div>
+                <div class="ModeInputCheckboxC">
+                    <input class="ModeCheckboxInput" type="password" id="txtMemberPassword" value="" onkeypress="javascript:if (event.keyCode === 13) { document.getElementById('btnMode').click(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelMode" onclick="javascript:SetVisibility('csModeDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnMode" onclick="javascript:ApplyModes();" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csNickDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/nickname.png" /> Change Nickname</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-100">
+                    <label id="lblNewNick" for="txtNewNick">New Nickname:</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedInput">
+                    <input class="CwfInput" type="text" id="txtNewNick" value="" onkeypress="javascript:if (event.keyCode === 13) { ChangeNick(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelNick" onclick="javascript:SetVisibility('csNickDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnChangeNick" onclick="javascript:ChangeNick();" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csKickDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/opcontrols/kick.png" /> Kick</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-100">
+                    <label id="lblKickReason" for="txtKickReason">Reason:</label>
+                    <input type="hidden" id="txtKickChannel" value="" />
+                    <input type="hidden" id="txtKickUser" value="" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedInput">
+                    <textarea class="CwfInput" rows="2" id="txtKickReason" onkeypress="javascript:if (event.keyCode === 13) { KickUser(); return false; }"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfLeft">
+                    <input class="CwfLeft CwfListCheckbox" type="checkbox" id="chkAlsoBan" onclick="javascript:document.getElementById('txtAlsoBanMask').disabled = !this.checked;" />
+                    <label class="CwfLeft" for="chkAlsoBan" id="lblAlsoBan">Also ban</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedInput">
+                    <input class="CwfInput" type="text" id="txtAlsoBanMask" value="" onkeypress="javascript:if (event.keyCode === 13) { KickUser(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelKick" onclick="javascript:SetVisibility('csKickDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnKick" onclick="javascript:KickUser();" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csBanDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/opcontrols/ban.png" /> Ban/Unban</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-25">
+                    <input type="hidden" id="txtBanChannel" value="" />
+                    <input type="hidden" id="txtBanUser" value="" />
+                </div>
+                <div class="CwfCol-75">
+                    <label id="lblBanFormat" for="txtBanMask">Format nick!user@host</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-25 NoTopMargin">
+                    <input type="radio" name="csBanMode" value="Ban" id="optBan" checked onclick="javascript:document.getElementById('txtBanMask').disabled = !this.checked; document.getElementById('csBanList').disabled = this.checked;" /> <label id="lblBan" for="optBan">Ban</label>
+                </div>
+                <div class="CwfCol-75 NoTopMargin">
+                    <input class="CwfInput" type="text" id="txtBanMask" value="" onkeypress="javascript:if (event.keyCode === 13) { BanUser(); return false; }">
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-25"></div>
+                <div class="CwfCol-75">
+                    <label id="lblUnbanList" for="csBanList">Users banned</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-25 NoTopMargin">
+                    <input type="radio" name="csBanMode" value="Unban" id="optUnban" onclick="javascript:document.getElementById('txtBanMask').disabled = this.checked; document.getElementById('csBanList').disabled = !this.checked;" /> <label id="lblUnban" for="optUnban">Unban</label>
+                </div>
+                <div class="CwfCol-75 NoTopMargin">
+                    <select class="CwfInput" id="csBanList" size="4" disabled>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons CwfRight">
+                    <input class="CwfRight" type="button" id="btnCancelBan" onclick="javascript:SetVisibility('csBanDialog', false);" value="Cancel">
+                    <input class="CwfRight" type="button" id="btnBan" onclick="javascript:BanUser();" value="OK">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Cwf CwfArea Hide" id="csAboutDialog">
+        <div class="CwfHeader"><img class="CwfHeaderIcon" src="images/toolbar/about.png" /> About</div>
+        <div class="CwfContainer">
+            <div class="row">
+                <div class="CwfCol-100">
+                    <img class="CwfAboutIcon CwfLeft" src="images/logo.png" />
+                    <div class="CwfAboutTitles CwfLeft">
+                        <div class="CwfAboutTitle CwfLeft">IRC</div>
+                        <div class="CwfAboutSubTitle CwfLeft">WebChat 3&trade;</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100">
+                    Version <label id="csVersion"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100">
+                    Programming by student of 321.
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100">
+                    <label id="csCopyright"></label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100">
+                    <a href="ccылка на контакты" target="_blank">пустая ссылка</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="CwfCol-100 StackedButtons">
+                    <input class="CwfRight" type="button" id="btnCancelAbout" onclick="javascript:SetVisibility('csAboutDialog', false);" value="Close">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="Hide" id="csEmojisPicker">
+        <div id="csEmojisList"></div>
+    </div>
+    <div class="Hide" id="csGifsPicker" onscroll="javascript:ArtLoadMore(1);">
+        <div id="csGifsList"></div>
+    </div>
+    <div class="Hide" id="csStickersPicker" onscroll="javascript:ArtLoadMore(2);">
+        <div id="csStickersList"></div>
+    </div>
+    <div class="Hide" id="csColorPicker">
+        <button class="ColorButton Color00" type="button" onclick="javascript:ApplyColor(0);"></button>
+        <button class="ColorButton Color01" type="button" onclick="javascript:ApplyColor(1);"></button>
+        <button class="ColorButton Color02" type="button" onclick="javascript:ApplyColor(2);"></button>
+        <button class="ColorButton Color03" type="button" onclick="javascript:ApplyColor(3);"></button>
+        <button class="ColorButton Color04" type="button" onclick="javascript:ApplyColor(4);"></button>
+        <button class="ColorButton Color05" type="button" onclick="javascript:ApplyColor(5);"></button>
+        <button class="ColorButton Color06" type="button" onclick="javascript:ApplyColor(6);"></button>
+        <button class="ColorButton Color07" type="button" onclick="javascript:ApplyColor(7);"></button>
+        <button class="ColorButton Color08" type="button" onclick="javascript:ApplyColor(8);"></button>
+        <button class="ColorButton Color09" type="button" onclick="javascript:ApplyColor(9);"></button>
+        <button class="ColorButton Color10" type="button" onclick="javascript:ApplyColor(10);"></button>
+        <button class="ColorButton Color11" type="button" onclick="javascript:ApplyColor(11);"></button>
+        <button class="ColorButton Color12" type="button" onclick="javascript:ApplyColor(12);"></button>
+        <button class="ColorButton Color13" type="button" onclick="javascript:ApplyColor(13);"></button>
+        <button class="ColorButton Color14" type="button" onclick="javascript:ApplyColor(14);"></button>
+        <button class="ColorButton Color15" type="button" onclick="javascript:ApplyColor(15);"></button>
+    </div>
+    <textarea class="Hide" id="csClipboard"></textarea>
+    <script>
+        Initialize();
+    </script>
+</body>
+</html>

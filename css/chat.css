@@ -1,0 +1,1256 @@
+/* Copyright (C) 2018-2024 Office IRC Inc. */
+
+*, ::after, ::before {
+    box-sizing: border-box
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff
+}
+
+hr {
+    box-sizing: content-box;
+    height: 0;
+    overflow: visible
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent
+}
+
+a:hover {
+    color: #0056b3;
+    text-decoration: underline
+}
+
+a:not([href]):not([tabindex]) {
+    color: inherit;
+    text-decoration: none
+}
+
+a:not([href]):not([tabindex]):focus, a:not([href]):not([tabindex]):hover {
+    color: inherit;
+    text-decoration: none
+}
+
+a:not([href]):not([tabindex]):focus {
+    outline: 0
+}
+
+img {
+    vertical-align: middle;
+    border-style: none
+}
+
+table {
+    border-collapse: collapse
+}
+
+label {
+    display: inline-block;
+}
+
+button {
+    border-radius: 0
+}
+
+    button:focus {
+        outline: 1px dotted;
+        outline: 5px auto -webkit-focus-ring-color
+    }
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit
+}
+
+button, input {
+    overflow: visible
+}
+
+button, select {
+    text-transform: none
+}
+
+select {
+    word-wrap: normal
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1)
+}
+
+.row {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px
+}
+
+.ChatContainer {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    display: flex;
+    flex-flow: column;
+    background-color: #fbfbfb;
+}
+
+.PadContainer {
+    padding: 8px;
+}
+
+.ToolbarPanel {
+    position: relative;
+}
+
+.ChatToolbar {
+    position: relative;
+    height: 46px;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    position: relative;
+    padding: 6px;
+    overflow: hidden;
+    margin-bottom: 6px;
+    display: flex;
+    flex-flow: row;
+}
+
+.ChannelName, .ChannelCounter, .ChannelTopic {
+    position: relative;
+    margin-top: 0px;
+    margin-left: 6px;
+    font-size: 20px;
+    float: left;
+}
+
+.ChannelTopic {
+    overflow: hidden;
+    display: inline-block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex-grow: 1;
+}
+
+.ChannelName, .ChannelCounter {
+    font-weight: 600;
+}
+
+.StatusIcon {
+    position: relative;
+    float: right;
+    margin: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.ChatButton {
+    position: relative;
+    float: left;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    background-color: #fbfbfb;
+    border-radius: 4px;
+    margin-right: 6px;
+    padding: 0px;
+    height: 32px;
+    width: 32px;
+    min-width: 32px;
+}
+
+.ChatButton img {
+    position: relative;
+    top: -2px;
+    height: 16px;
+    width: 16px;
+}
+
+.TabBar {
+    position: relative;
+    margin-bottom: 6px;
+}
+
+.TabBar:empty {
+    display: none;
+}
+
+.TabBar button {
+    border: 1px solid #d2d2d2;
+    background-color: #fbfbfb;
+    border-style: outset;
+    border-radius: 4px;
+    padding: 0px 8px;
+    margin-right: 6px;
+}
+
+.ChatArea {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: row;
+}
+
+.MainPanel {
+    position: relative;
+    flex-grow: 1;
+    display: flex;
+    flex-flow: column;
+    min-width: calc(70%);
+}
+
+.SidePanel {
+    position: relative;
+    width: 206px;
+}
+
+.PanelSlideBar {
+    position: relative;
+    height: 100%;
+    cursor: e-resize;
+    width: 6px;
+}
+
+.PanelSplit {
+    position: relative;
+    flex-grow: 1;
+}
+
+.HistoryPanel {
+    position: absolute;
+    top: 0;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #ffffff;
+}
+
+.HistoryContent {
+    position: relative;
+    white-space: pre-wrap;
+    top: 0px;
+    bottom: 0px;
+    margin: 0px 0px;
+    left: 0px;
+    right: 0px;
+}
+
+.FixedFont {
+    font-size: 22px;
+    font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+.HistoryContent p {
+    margin: 0px 0px;
+    padding: 0px 4px;
+    line-height: 21px;
+}
+
+.HistoryContent br {
+    clear: left;
+}
+
+.FormatBar {
+    position: relative;
+    top: 6px;
+    height: 37px;
+    overflow: hidden;
+}
+
+.FormatButton {
+    float: left;
+    border: 0px;
+    background-color: #fbfbfb;
+    padding: 0px;
+    height: 32px;
+    width: 32px;
+}
+
+.FormatButton img {
+    position: relative;
+    top: -2px;
+    width: 20px;
+    height: 20px;
+}
+
+.FormatButton ~ .FormatButton {
+    margin-left: 4px;
+}
+
+.FormatButton:hover {
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    border-radius: 4px;
+}
+
+.FormatCheckbox {
+    display: none;
+}
+
+.fcBold {
+    background-image: url(../images/formatbar/bold.png);
+}
+
+.fcItalic {
+    background-image: url(../images/formatbar/italic.png);
+}
+
+.fcUnderline {
+    background-image: url(../images/formatbar/underline.png);
+}
+
+.fcAway {
+    background-image: url(../images/formatbar/away.png);
+}
+
+.fcPause {
+    background-image: url(../images/formatbar/pause.png);
+}
+
+.FormatCheckboxLabel {
+    float: left;
+    margin-left: 4px;
+    cursor: pointer;
+    border: 1px solid #fbfbfb;
+    background-position: 5px 5px;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    height: 32px;
+    width: 32px;
+}
+
+.FormatCheckbox:checked + .FormatCheckboxLabel {
+    border: 1px solid #d2d2d2;
+    background-color: #ffffff;
+    background-position: 6px 6px;
+    border-radius: 4px;
+    border-style: inset;
+}
+
+.FormatCheckbox:not(:checked) + .FormatCheckboxLabel:hover {
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    border-radius: 4px;
+}
+
+.OnRight {
+    float: right;
+}
+
+.MemberList {
+    position: absolute;
+    top: 0px;
+    left: 6px;
+    width: calc(100% - 6px);
+    bottom: 0px;
+    background-color: #ffffff;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#lblMembers div {
+    height: 24px;
+    border: 1px solid #ffffff;
+    background-position: 3px 1px;
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    padding-left: 27px;
+    margin-left: 0px;
+    cursor: default;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+#lblMembers div:hover {
+    border: 1px solid #1881c4;
+    background-color: #daf1ff;
+}
+
+#lblMembers .Selected {
+    border: 1px solid #aec3d0;
+    background-color: #9ad8ff;
+}
+
+#lblMembers .Selected:hover {
+    border: 1px solid #6cc6fe;
+    background-color: #edf4f8;
+}
+
+.MemberList .IRCop {
+    background-image: url(../images/members/ircop.png);
+}
+
+.MemberList .Owner {
+    background-image: url(../images/members/owner.png);
+}
+
+.MemberList .Host {
+    background-image: url(../images/members/host.png);
+}
+
+.MemberList .Aide {
+    background-image: url(../images/members/aide.png);
+}
+
+.MemberList .Participant {
+    background-image: url(../images/members/participant.png);
+}
+
+.MemberList .Spectator {
+    background-image: url(../images/members/spectator.png);
+}
+
+.MemberList .Away {
+    background-image: url(../images/members/away.png);
+}
+
+.MemberList .Ignored {
+    background-image: url(../images/members/ignored.png);
+}
+
+.InputPanel {
+    position: relative;
+}
+
+.InputBar {
+    margin-top: 6px;
+    position: relative;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    padding: 8px;
+    height: 48px;
+    width: 100%;
+    display: flex;
+    flex-flow: row;
+}
+
+.CommandInput {
+    float: left;
+    height: 32px;
+    padding-top: 2px;
+    flex-grow: 1;
+    background-color: #ffffff;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.CommandInput:focus {
+    outline: none;
+    background-color: #ffffff;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+}
+
+.CommandButtons {
+    min-width: 140px;
+}
+
+.CommandButtons button {
+    margin-right: 0px;
+}
+
+.CommandButtons button:first-of-type {
+    margin-left: 6px;
+}
+
+.CommandButtons button ~ button {
+    margin-left: 2px;
+}
+
+.CommandButtons button:disabled, button[disabled] {
+    opacity: 0.4;
+    filter: alpha(opacity=40);
+}
+
+.Spacer {
+    margin-right: 18px;
+}
+
+.Hide {
+    display: none;
+}
+
+.Cwm {
+    width: 180px;
+    box-shadow: 3px 3px 5px #888888;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    border-radius: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: fixed;
+    display: none;
+    background-color: #ffffff;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.CwfHeader {
+    position: relative;
+    background-color: #afc7e1;
+    padding: 4px;
+    cursor: default;
+}
+
+.CwfHeaderIcon {
+    margin: 4px;
+    height: 16px;
+    width: 16px;
+}
+
+.CwfArea {
+    position: absolute;
+    background-color: #fbfbfb;
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: 0px 0px 0px 0px;
+}
+
+.CwfContainer {
+    padding: 4px 12px 4px 12px;
+}
+
+.CwmItem {
+    padding-left: 12px;
+    height: 25px;
+}
+
+.CwmItem.Disabled {
+    padding-left: 12px;
+    color: #A0A0A0;
+    height: 25px;
+}
+
+.CwmItem:hover {
+    background-color: #6CB5FF;
+    cursor: pointer;
+}
+
+.CwmItem.Disabled:hover {
+    background-color: #EFEFEF;
+    cursor: pointer;
+}
+
+#csConnectDialog {
+    max-width: 380px;
+}
+
+#csJoinDialog {
+    max-width: 380px;
+}
+
+#csCaptchaDialog {
+    max-width: 430px;
+}
+
+#csListDialog {
+    max-width: 620px;
+}
+
+#csNickDialog {
+    max-width: 380px;
+}
+
+#csKickDialog {
+    max-width: 380px;
+}
+
+#csAboutDialog {
+    max-width: 370px;
+}
+
+#csBanDialog {
+    max-width: 400px;
+}
+
+#csModeDialog {
+    max-width: 424px;
+}
+
+#CaptchaImage {
+    border: 1px solid #000000;
+    width: 360px;
+}
+
+#lblModeInfo {
+    height: 55px;
+}
+
+#csBanList {
+    height: 97px;
+}
+
+.CwfCol-5 {
+    float: left;
+    width: 5%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-10 {
+    float: left;
+    width: 10%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-15 {
+    float: left;
+    width: 15%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-20 {
+    float: left;
+    width: 20%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-25 {
+    float: left;
+    width: 25%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-30 {
+    float: left;
+    width: 30%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-35 {
+    float: left;
+    width: 35%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-40 {
+    float: left;
+    width: 40%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-45 {
+    float: left;
+    width: 45%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-50 {
+    float: left;
+    width: 50%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-55 {
+    float: left;
+    width: 55%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-60 {
+    float: left;
+    width: 60%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-65 {
+    float: left;
+    width: 65%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-70 {
+    float: left;
+    width: 70%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-75 {
+    float: left;
+    width: 75%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-80 {
+    float: left;
+    width: 80%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-90 {
+    float: left;
+    width: 90%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.CwfCol-100 {
+    float: left;
+    width: 100%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.Cwf .NoMargin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+.Cwf .NoTopMargin {
+    margin-top: 0px;
+}
+
+.Cwf .NoBottomMargin {
+    margin-bottom: 0px;
+}
+
+.ConnectInputLabel {
+    float: left;
+    width: 110px;
+    text-align: right;
+    margin: 2px;
+}
+
+.ConnectInput {
+    float: left;
+    margin: 2px 0px 2px 0px;
+    height: 34px;
+    width: 220px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+textarea.ConnectInput {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ModeInputLabel {
+    float: left;
+    width: 75px;
+    text-align: right;
+    margin: 2px;
+}
+
+.ModeInput {
+    float: left;
+    margin: 2px 0px 2px 0px;
+    height: 34px;
+    width: 300px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.ModeInputCheckboxA {
+    float: left;
+    width: 170px;
+}
+
+.ModeInputCheckboxB {
+    float: left;
+    width: 210px;
+}
+
+.ModeInputCheckboxC {
+    float: left;
+    width: 190px;
+}
+
+.ModeCheckboxInput {
+    float: left;
+    margin: 2px 0px 2px 0px;
+    height: 34px;
+    width: 190px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.StackedInput {
+    margin-top: 0px;
+    clear: both;
+}
+
+.StackedInput Input {
+    width: 100%;
+}
+
+.StackedButtons, .CaptchaSpacer {
+    margin-top: 9px;
+    clear: both;
+}
+
+.RoomList {
+    width: 100%;
+    height: 200px;
+}
+
+.Cwf label {
+    padding: 4px 8px 4px 0px;
+    display: inline-block;
+}
+
+.Cwf .row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.Cwf row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.CwfLeft {
+    float: left;
+}
+
+.CwfRight {
+    float: right;
+}
+
+.CwfRight input {
+    margin: 4px;
+}
+
+.CwfSlimInput {
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.CwfInput {
+    width: 100%;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: vertical;
+}
+
+.Cwf input[type=button] {
+    min-width: 70px;
+}
+
+.Cwf input[type=radio] {
+    margin-right: 2px;
+}
+
+.CwfLeft, .CwfRight {
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+    
+.CwfLeft input[type=button] ~ input[type=button] {
+    margin-left: 12px;
+}
+
+.CwfRight input[type=button] ~ input[type=button] {
+    margin-right: 12px;
+}
+
+.CwfListCheckbox {
+    margin: 6px 6px;
+}
+
+.CwfModeCheckbox {
+    margin: 14px 6px;
+}
+
+.StackedButtons label {
+    margin-top: -4px;
+}
+
+.CwfValidationError {
+    color: #ff0000;
+}
+
+.Cwf textarea, .Cwf select {
+    resize: none;
+}
+
+#csChannelName, #csChannelTopic {
+    white-space: pre-wrap;
+}
+
+.RoomList .Emoji {
+    padding: 0px 18px 18px 0px;
+    background-size: 18px 18px;
+}
+
+#csChannelTopic .Emoji {
+    padding: 0px 22px 22px 0px;
+    background-size: 22px 22px;
+}
+
+.RoomList table {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    border: 1px outset #d2d2d2;
+    background-color: #ffffff;
+}
+
+.RoomList td {
+    overflow: hidden;
+}
+
+.RoomList th:nth-child(1), .RoomList td:nth-child(1) {
+    white-space: pre-wrap;
+    min-width: 170px;
+    width: 170px;
+}
+
+.RoomList th:nth-child(2), .RoomList td:nth-child(2) {
+    min-width: 70px;
+    width: 70px;
+}
+
+.RoomList th:nth-child(3), .RoomList td:nth-child(3) {
+    white-space: pre-wrap;
+    flex-grow: 1;
+}
+
+.FixedHeader tbody {
+    display: block;
+    overflow: auto;
+    width: 100%;
+}
+
+#csChannelList tbody {
+    height: 169px;
+}
+
+.FixedHeader tr {
+    display: flex;
+    flex-flow: row;
+    height: 28px;
+}
+
+.Cwt thead th {
+    cursor: pointer;
+    padding-left: 6px;
+    background-color: #fbfbfb;
+    border: 1px solid #d2d2d2;
+}
+
+.FixedHeader td {
+    cursor: pointer;
+    padding-left: 6px;
+    background-color: #ffffff;
+    border: 1px solid #f4f4f4;
+}
+
+.FixedHeader .Selected td {
+    border: 1px solid #aec3d0;
+    background-color: #9ad8ff;
+}
+
+.FixedHeader tr:hover td {
+    border: 1px solid #1881c4;
+    background-color: #daf1ff;
+}
+
+.FixedHeader .Selected:hover td {
+    border: 1px solid #6cc6fe;
+    background-color: #edf4f8;
+}
+
+.Cwt thead th:after {
+    padding-left: 7px
+}
+
+.Cwt thead th[CwtColSortOrder="1"]:after {
+    content: "\25B4"
+}
+
+.Cwt thead th[CwtColSortOrder="-1"]:after {
+    content: "\25BE"
+}
+
+#csColorPicker {
+    box-shadow: 3px 3px 5px #888888;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    border-radius: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: fixed;
+    display: none;
+    background-color: #ffffff;
+    height: 41px;
+    width: 140px;
+}
+
+.ColorButton {
+    float: left;
+    border: 0px;
+    padding: 0px;
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+}
+
+.ColorButton:hover {
+    border: 1px solid #000000;
+    border-style: outset;
+}
+
+.Color00 {
+    background-color: #FFFFFF;
+}
+
+.Color01 {
+    background-color: #000000;
+}
+
+.Color02 {
+    background-color: #00007F;
+}
+
+.Color03 {
+    background-color: #009300;
+}
+
+.Color04 {
+    background-color: #FF0000;
+}
+
+.Color05 {
+    background-color: #7F0000;
+}
+
+.Color06 {
+    background-color: #9C009C;
+}
+
+.Color07 {
+    background-color: #FC7F00;
+}
+
+.Color08 {
+    background-color: #FFFF00;
+}
+
+.Color09 {
+    background-color: #00FC00;
+}
+
+.Color10 {
+    background-color: #009393;
+}
+
+.Color11 {
+    background-color: #00FFFF;
+}
+
+.Color12 {
+    background-color: #0000FC;
+}
+
+.Color13 {
+    background-color: #FF00FF;
+}
+
+.Color14 {
+    background-color: #7F7F7F;
+}
+
+.Color15 {
+    background-color: #D2D2D2;
+}
+
+#csEmojisPicker, #csGifsPicker, #csStickersPicker {
+    box-shadow: 3px 3px 5px #888888;
+    border-style: solid;
+    border-width: 1px;
+    border-color: grey;
+    border-radius: 2px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    position: fixed;
+    display: none;
+    background-color: #ffffff;
+    height: 103px;
+    width: 255px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#csGifsPicker {
+    height: 262px;
+    width: 405px;
+}
+
+#csStickersPicker {
+    height: 199px;
+    width: 364px;
+}
+
+.EmojiButton {
+    float: left;
+    border: 0px;
+    background-color: #ffffff;
+    padding: 0px;
+    height: 32px;
+    width: 32px;
+    cursor: pointer;
+}
+
+.GifButton {
+    float: left;
+    border: 0px;
+    background-color: #ffffff;
+    padding: 0px;
+    height: 85px;
+    width: 125px;
+    cursor: pointer;
+}
+
+.StickerButton {
+    float: left;
+    border: 0px;
+    background-color: #ffffff;
+    padding: 0px;
+    height: 64px;
+    width: 64px;
+    cursor: pointer;
+}
+
+.EmojiButton img {
+    position: relative;
+    top: -2px;
+    height: 20px;
+    width: 20px;
+}
+
+.GifButton img {
+    position: relative;
+    height: 81px;
+    width: 121px;
+}
+
+.StickerButton img {
+    position: relative;
+    top: -2px;
+    height: 60px;
+    width: 60px;
+}
+
+.EmojiButton:hover, .StickerButton:hover {
+    border: 1px solid #d2d2d2;
+    border-style: outset;
+    border-radius: 4px;
+}
+
+.GifButton:hover {
+    background-color: blue;
+}
+
+.Emoji {
+    border: 0px;
+    padding: 0px;
+    width: 20px;
+    height: 20px;
+    background-position: 0px 0px;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+}
+
+.Gif {
+    border: 0px;
+    padding: 5px;
+    max-height: 200px;
+    background-position: 0px 0px;
+    background-size: 0px 0px;
+}
+
+.Sticker {
+    border: 0px;
+    padding: 0px;
+    height: 160px;
+    background-position: 0px 0px;
+    background-size: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.CwfAboutIcon {
+    height: 64px;
+    width: 64px;
+}
+
+.CwfAboutTitles {
+    margin: 0px 0px 0px 5px;
+}
+
+.CwfAboutTitle {
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0px;
+    color: #000000;
+    padding: 0px;
+}
+
+.CwfAboutSubTitle {
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: -8px;
+    color: #000000;
+    clear: both;
+    padding: 0px;
+}
